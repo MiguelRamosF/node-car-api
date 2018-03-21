@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const { getBrands } = require('node-car-api');
 const Brands = require('./models/brands');
 
+/*
 // connect to mongodb
 mongoose.connect('mongodb://localhost/CARADISIAC');
 mongoose.Promise = global.Promise;
@@ -44,5 +45,39 @@ app.use(function(err, req, res, next){
 app.listen(process.env.port || 4000, function(){
     console.log('now listening for requests on port 4000');
 });
+*/
 
 
+var elasticsearch = require('elasticsearch');
+var client = new elasticsearch.Client({
+  host: 'localhost:9200',
+  log: 'trace'
+});
+
+client.ping({
+    // ping usually has a 3000ms timeout
+    requestTimeout: 1000
+  }, function (error) {
+    if (error) {
+      console.trace('elasticsearch cluster is down!');
+    } else {
+      console.log('All is well');
+    }
+  });
+
+/*var body = {
+    user:'miguel'
+}
+
+client.indices.putMapping({index:"twitter", type:"_doc", body:body});*/
+
+client.indices.create({  
+    index: 'gov'
+  },function(err,resp,status) {
+    if(err) {
+      console.log(err);
+    }
+    else {
+      console.log("create",resp);
+    }
+  });
